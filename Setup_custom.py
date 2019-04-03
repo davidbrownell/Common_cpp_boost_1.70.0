@@ -94,8 +94,10 @@ def GetDependencies():
     (aka is configurable) or a single Configuration if not.
     """
 
-    return Configuration(
-        "boost v1.70.0",
+    d = OrderedDict()
+
+    d["Standard"] = Configuration(
+        "boost v1.70.0 - Standard",
         [
             Dependency(
                 "28F6B685610244468CBA2A80E84E021F",
@@ -105,6 +107,29 @@ def GetDependencies():
             ),
         ],
     )
+
+    for config_name, repo_name, repo_id, config_desc in [
+        ("MSVC", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC", "boost v1.70.0 - MSVC 2017"),
+    ]:
+        d[config_name] = Configuration(
+            config_desc,
+            [
+                Dependency(
+                    repo_id,
+                    repo_name,
+                    "x64",
+                    "https://github.com/davidbrownell/{}.git".format(repo_name),
+                ),
+                Dependency(
+                    "28F6B685610244468CBA2A80E84E021F",
+                    "Common_cpp_boost_Common",
+                    None,
+                    "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
+                ),
+            ],
+        )
+        
+    return d
 
 
 # ----------------------------------------------------------------------
