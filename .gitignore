@@ -11,3 +11,7 @@ Activate.sh
 coverage.xml
 
 .vscode/*
+
+src/UnitTests/build/*
+
+Libraries/C++/boost/v1.70.0/*

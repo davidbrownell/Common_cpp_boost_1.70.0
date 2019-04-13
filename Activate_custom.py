@@ -19,6 +19,7 @@ import sys
 
 sys.path.insert(0, os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL"))
 from RepositoryBootstrap.SetupAndActivate import CommonEnvironment, CurrentShell
+from RepositoryBootstrap.Impl.ActivationActivity import ActivationActivity
 
 del sys.path[0]
 
@@ -26,6 +27,11 @@ del sys.path[0]
 _script_fullpath                            = CommonEnvironment.ThisFullpath()
 _script_dir, _script_name                   = os.path.split(_script_fullpath)
 # ----------------------------------------------------------------------
+
+# Ensure that we are loading custom data from this dir and not some other repository.
+sys.modules.pop("_custom_data", None)
+
+from _custom_data import _CUSTOM_DATA
 
 # <Class '<name>' has no '<attr>' member> pylint: disable = E1101
 # <Unrearchable code> pylint: disable = W0101
@@ -52,7 +58,60 @@ def GetCustomActions(
     cases, this is Bash on Linux systems and Batch or PowerShell on Windows systems.
     """
 
-    return []
+    actions = []
+
+    if fast:
+        actions.append(
+            CurrentShell.Commands.Message(
+                "** FAST: Activating without verifying content. ({})".format(_script_fullpath),
+            ),
+        )
+    else:
+        for name, version, path_parts in _CUSTOM_DATA:
+            this_dir = os.path.join(*([_script_dir] + path_parts))
+            assert os.path.isdir(this_dir), this_dir
+
+            actions += [
+                CurrentShell.Commands.Execute(
+                    'python "{script}" Verify "{name}" "{dir}" "{version}"'.format(
+                        script=os.path.join(
+                            os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL"),
+                            "RepositoryBootstrap",
+                            "SetupAndActivate",
+                            "AcquireBinaries.py",
+                        ),
+                        name=name,
+                        dir=this_dir,
+                        version=version,
+                    ),
+                ),
+                CurrentShell.Commands.Message(""),
+            ]
+
+        # Initialize the environment
+        boost_dir = ActivationActivity.GetVersionedDirectory(
+            version_specs.Libraries,
+            _script_dir,
+            "Libraries",
+            "C++",
+            "boost",
+        )
+        assert os.path.isdir(boost_dir), boost_dir
+
+        boost_version = os.path.basename(boost_dir)
+        if boost_version.startswith("v"):
+            boost_version = boost_version[1:]
+
+        actions += [
+            CurrentShell.Commands.Set("DEVELOPMENT_ENVIRONMENT_BOOST_VERSION", boost_version),
+            CurrentShell.Commands.Set(
+                "DEVELOPMENT_ENVIRONMENT_BOOST_VERSION_SHORT",
+                ".".join(boost_version.split(".")[:-1]),
+            ),
+            CurrentShell.Commands.Set("DEVELOPMENT_ENVIRONMENT_BOOST_ROOT", boost_dir),
+        ]
+
+    return actions
 
 
 # ----------------------------------------------------------------------
