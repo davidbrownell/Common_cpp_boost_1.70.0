@@ -148,6 +148,18 @@ def GetCustomActions(debug, verbose, explicit_configurations):
 
     actions = []
 
+    if CurrentShell.CategoryName == "Windows":
+        # ----------------------------------------------------------------------
+        def FilenameToUri(filename):
+            return CommonEnvironmentImports.FileSystem.FilenameToUri(filename).replace(
+                "%",
+                "%%",
+            )
+
+        # ----------------------------------------------------------------------
+    else:
+        FilenameToUri = CommonEnvironmentImports.FileSystem.FilenameToUri
+
     for name, version, path_parts in _CUSTOM_DATA:
         this_dir = os.path.join(*([_script_dir] + path_parts))
         assert os.path.isdir(this_dir), this_dir
@@ -164,10 +176,7 @@ def GetCustomActions(debug, verbose, explicit_configurations):
                         "AcquireBinaries.py",
                     ),
                     name=name,
-                    uri=CommonEnvironmentImports.FileSystem.FilenameToUri(install_filename).replace(
-                        "%",
-                        "%%",
-                    ),
+                    uri=FilenameToUri(install_filename),
                     dir=this_dir,
                     version=version,
                 ),
