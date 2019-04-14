@@ -42,7 +42,7 @@ _script_dir, _script_name                   = os.path.split(_script_fullpath)
 # <Wildcard import> pylint: disable = W0401
 # <Unused argument> pylint: disable = W0613
 
-fundamental_repo                                                            = os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL")
+fundamental_repo                            = os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL")
 assert os.path.isdir(fundamental_repo), fundamental_repo
 
 sys.path.insert(0, fundamental_repo)
@@ -51,6 +51,8 @@ from RepositoryBootstrap.SetupAndActivate import CurrentShell               # <U
 from RepositoryBootstrap.SetupAndActivate.Configuration import *            # <Unused import> pylint: disable = W0614
 
 del sys.path[0]
+
+from _custom_data import _CUSTOM_DATA
 
 # ----------------------------------------------------------------------
 # There are two types of repositories: Standard and Mixin. Only one standard
@@ -98,18 +100,22 @@ def GetDependencies():
 
     d["Standard"] = Configuration(
         "boost v1.70.0 - Standard",
-        [
-            Dependency(
-                "28F6B685610244468CBA2A80E84E021F",
-                "Common_cpp_boost_Common",
-                None,
-                "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
-            ),
-        ],
+        [Dependency("28F6B685610244468CBA2A80E84E021F", "Common_cpp_boost_Common", None, "https://github.com/davidbrownell/Common_cpp_boost_Common.git")],
     )
 
     for config_name, repo_name, repo_id, config_desc in [
-        ("MSVC", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC", "boost v1.70.0 - MSVC 2017"),
+        (
+            "MSVC-2019",
+            "Common_cpp_MSVC_2019",
+            "AB7D87C49C2449F79D9F42E5195030FD",
+            "boost v1.70.0 - MSVC 2019",
+        ),
+        (
+            "MSVC-2017",
+            "Common_cpp_MSVC_2017",
+            "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
+            "boost v1.70.0 - MSVC 2017",
+        ),
     ]:
         d[config_name] = Configuration(
             config_desc,
@@ -128,7 +134,7 @@ def GetDependencies():
                 ),
             ],
         )
-        
+
     return d
 
 
@@ -143,4 +149,38 @@ def GetCustomActions(debug, verbose, explicit_configurations):
     cases, this is Bash on Linux systems and Batch or PowerShell on Windows systems.
     """
 
-    return []
+    actions = []
+
+    if CurrentShell.CategoryName == "Windows":
+        # ----------------------------------------------------------------------
+        def FilenameToUri(filename):
+            return CommonEnvironmentImports.FileSystem.FilenameToUri(filename).replace("%", "%%")
+
+        # ----------------------------------------------------------------------
+    else:
+        FilenameToUri = CommonEnvironmentImports.FileSystem.FilenameToUri
+
+    for name, version, path_parts in _CUSTOM_DATA:
+        this_dir = os.path.join(*([_script_dir] + path_parts))
+        assert os.path.isdir(this_dir), this_dir
+
+        install_filename = os.path.join(this_dir, "Install.7z")
+
+        actions += [
+            CurrentShell.Commands.Execute(
+                'python "{script}" Install "{name}" "{uri}" "{dir}" "{version}"'.format(
+                    script=os.path.join(
+                        os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL"),
+                        "RepositoryBootstrap",
+                        "SetupAndActivate",
+                        "AcquireBinaries.py",
+                    ),
+                    name=name,
+                    uri=FilenameToUri(install_filename),
+                    dir=this_dir,
+                    version=version,
+                ),
+            )
+        ]
+
+    return actions
