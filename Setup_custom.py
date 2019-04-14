@@ -42,7 +42,7 @@ _script_dir, _script_name                   = os.path.split(_script_fullpath)
 # <Wildcard import> pylint: disable = W0401
 # <Unused argument> pylint: disable = W0613
 
-fundamental_repo                                                            = os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL")
+fundamental_repo                            = os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL")
 assert os.path.isdir(fundamental_repo), fundamental_repo
 
 sys.path.insert(0, fundamental_repo)
@@ -100,19 +100,22 @@ def GetDependencies():
 
     d["Standard"] = Configuration(
         "boost v1.70.0 - Standard",
-        [
-            Dependency(
-                "28F6B685610244468CBA2A80E84E021F",
-                "Common_cpp_boost_Common",
-                None,
-                "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
-            ),
-        ],
+        [Dependency("28F6B685610244468CBA2A80E84E021F", "Common_cpp_boost_Common", None, "https://github.com/davidbrownell/Common_cpp_boost_Common.git")],
     )
 
     for config_name, repo_name, repo_id, config_desc in [
-        ("MSVC-2019", "Common_cpp_MSVC_2019", "AB7D87C49C2449F79D9F42E5195030FD", "boost v1.70.0 - MSVC 2019"),
-        ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC", "boost v1.70.0 - MSVC 2017"),
+        (
+            "MSVC-2019",
+            "Common_cpp_MSVC_2019",
+            "AB7D87C49C2449F79D9F42E5195030FD",
+            "boost v1.70.0 - MSVC 2019",
+        ),
+        (
+            "MSVC-2017",
+            "Common_cpp_MSVC_2017",
+            "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
+            "boost v1.70.0 - MSVC 2017",
+        ),
     ]:
         d[config_name] = Configuration(
             config_desc,
@@ -131,7 +134,7 @@ def GetDependencies():
                 ),
             ],
         )
-        
+
     return d
 
 
@@ -151,10 +154,7 @@ def GetCustomActions(debug, verbose, explicit_configurations):
     if CurrentShell.CategoryName == "Windows":
         # ----------------------------------------------------------------------
         def FilenameToUri(filename):
-            return CommonEnvironmentImports.FileSystem.FilenameToUri(filename).replace(
-                "%",
-                "%%",
-            )
+            return CommonEnvironmentImports.FileSystem.FilenameToUri(filename).replace("%", "%%")
 
         # ----------------------------------------------------------------------
     else:
@@ -180,7 +180,7 @@ def GetCustomActions(debug, verbose, explicit_configurations):
                     dir=this_dir,
                     version=version,
                 ),
-            ),
+            )
         ]
 
     return actions
