@@ -109,6 +109,10 @@ def GetCustomActions(
                 ".".join(boost_version.split(".")[:-1]),
             ),
             CurrentShell.Commands.Set("DEVELOPMENT_ENVIRONMENT_BOOST_ROOT", boost_dir),
+            CurrentShell.Commands.Set(
+                "DEVELOPMENT_ENVIRONMENT_BOOST_IS_STANDARD_CONFIGURATION",
+                "1" if configuration == "Standard" else "0",
+            ),
         ]
 
     return actions
