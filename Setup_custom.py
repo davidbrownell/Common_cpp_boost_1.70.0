@@ -103,37 +103,46 @@ def GetDependencies():
         [Dependency("28F6B685610244468CBA2A80E84E021F", "Common_cpp_boost_Common", None, "https://github.com/davidbrownell/Common_cpp_boost_Common.git")],
     )
 
-    for config_name, repo_name, repo_id, config_desc in [
+    for config_name, repo_name, repo_id, config_desc, is_valid_func in [
         (
             "MSVC-2019",
             "Common_cpp_MSVC_2019",
             "AB7D87C49C2449F79D9F42E5195030FD",
             "boost v1.70.0 - MSVC 2019",
+            lambda: CurrentShell.CategoryName == "Windows",
         ),
         (
             "MSVC-2017",
             "Common_cpp_MSVC_2017",
             "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
             "boost v1.70.0 - MSVC 2017",
+            lambda: CurrentShell.CategoryName == "Windows",
         ),
     ]:
-        d[config_name] = Configuration(
-            config_desc,
-            [
-                Dependency(
-                    repo_id,
-                    repo_name,
-                    "x64",
-                    "https://github.com/davidbrownell/{}.git".format(repo_name),
-                ),
-                Dependency(
-                    "28F6B685610244468CBA2A80E84E021F",
-                    "Common_cpp_boost_Common",
-                    None,
-                    "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
-                ),
-            ],
-        )
+        if not is_valid_func():
+            continue
+
+        for architecture in ["x64", "x86"]:
+            this_config_name = "{}-{}".format(config_name, architecture)
+            this_config_desc = "{} ({})".format(config_desc, architecture)
+
+            d[this_config_name] = Configuration(
+                this_config_desc,
+                [
+                    Dependency(
+                        repo_id,
+                        repo_name,
+                        architecture,
+                        "https://github.com/davidbrownell/{}.git".format(repo_name),
+                    ),
+                    Dependency(
+                        "28F6B685610244468CBA2A80E84E021F",
+                        "Common_cpp_boost_Common",
+                        None,
+                        "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
+                    ),
+                ],
+            )
 
     return d
 
