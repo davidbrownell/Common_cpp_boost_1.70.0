@@ -27,7 +27,7 @@ _script_dir, _script_name                   = os.path.split(_script_fullpath)
 _CUSTOM_DATA                                = [
     (
         "boost - 1.70.0",
-        "0BC6EEB01484831568BB6BD0FDF92BEB9AD2CA9748DE9CF2C825FA12865B2DB0",
+        "0bc6eeb01484831568bb6bd0fdf92beb9ad2ca9748de9cf2c825fa12865b2db0",
         [
             "Libraries",
             "C++",
