@@ -103,6 +103,13 @@ def GetDependencies():
         [Dependency("28F6B685610244468CBA2A80E84E021F", "Common_cpp_boost_Common", None, "https://github.com/davidbrownell/Common_cpp_boost_Common.git")],
     )
 
+    if CurrentShell.CategoryName == "Windows":
+        architectures = ["x64", "x86"]
+    else:
+        # Cross compiling on Linux is much more difficult on Linux than it is on
+        # Windows. Only support the current architecture.
+        architectures = [CurrentShell.Architecture]
+
     for config_name, repo_name, repo_id, config_desc, is_valid_func in [
         (
             "MSVC-2019",
@@ -122,7 +129,7 @@ def GetDependencies():
         if not is_valid_func():
             continue
 
-        for architecture in ["x64", "x86"]:
+        for architecture in architectures:
             this_config_name = "{}-{}".format(config_name, architecture)
             this_config_desc = "{} ({})".format(config_desc, architecture)
 
