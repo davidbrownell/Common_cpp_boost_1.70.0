@@ -85,7 +85,6 @@ def GetCustomActions(
                         version=version,
                     ),
                 ),
-                CurrentShell.Commands.Message(""),
             ]
 
         # Initialize the environment
