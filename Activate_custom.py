@@ -89,7 +89,7 @@ def GetCustomActions(
 
         # Initialize the environment
         boost_dir = ActivationActivity.GetVersionedDirectory(
-            version_specs.Libraries,
+            version_specs.Libraries.get("C++", {}),
             _script_dir,
             "Libraries",
             "C++",
