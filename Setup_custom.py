@@ -98,10 +98,18 @@ def GetDependencies():
 
     d = OrderedDict()
 
-    d["Standard"] = Configuration(
-        "boost v1.70.0 - Standard",
-        [Dependency("28F6B685610244468CBA2A80E84E021F", "Common_cpp_boost_Common", None, "https://github.com/davidbrownell/Common_cpp_boost_Common.git")],
-    )
+    for configuration in ["standard", "no_helpers"]:
+        d[configuration] = Configuration(
+            "boost v1.70.0 - {}".format(configuration),
+            [
+                Dependency(
+                    "28F6B685610244468CBA2A80E84E021F",
+                    "Common_cpp_boost_Common",
+                    configuration,
+                    "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
+                ),
+            ],
+        )
 
     if CurrentShell.CategoryName == "Windows":
         architectures = ["x64", "x86"]
@@ -145,7 +153,7 @@ def GetDependencies():
                     Dependency(
                         "28F6B685610244468CBA2A80E84E021F",
                         "Common_cpp_boost_Common",
-                        None,
+                        "standard",
                         "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
                     ),
                 ],
@@ -159,7 +167,7 @@ def GetCustomActions(debug, verbose, explicit_configurations):
     """
     Returns an action or list of actions that should be invoked as part of the setup process.
 
-    Actions are generic command line statements defined in 
+    Actions are generic command line statements defined in
     <Common_Environment>/Libraries/Python/CommonEnvironment/v1.0/CommonEnvironment/Shell/Commands/__init__.py
     that are converted into statements appropriate for the current scripting language (in most
     cases, this is Bash on Linux systems and Batch or PowerShell on Windows systems.
