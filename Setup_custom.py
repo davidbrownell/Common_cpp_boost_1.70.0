@@ -98,63 +98,64 @@ def GetDependencies():
 
     d = OrderedDict()
 
-    for configuration in ["standard", "no_helpers"]:
-        d[configuration] = Configuration(
-            "boost v1.70.0 - {}".format(configuration),
-            [
-                Dependency(
-                    "28F6B685610244468CBA2A80E84E021F",
-                    "Common_cpp_boost_Common",
-                    configuration,
-                    "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
-                ),
-            ],
-        )
+    d["standard"] = Configuration(
+        "boost v1.70.0 - standard (No compiler dependencies)",
+        [
+            Dependency(
+                "28F6B685610244468CBA2A80E84E021F",
+                "Common_cpp_boost_Common",
+                None,
+                "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
+            ),
+        ],
+    )
 
     if CurrentShell.CategoryName == "Windows":
         architectures = ["x64", "x86"]
+
+        compiler_factories = [
+            lambda: (
+                "MSVC-2019",
+                "Common_cpp_MSVC_2019",
+                "AB7D87C49C2449F79D9F42E5195030FD",
+                "MSVC 2019",
+            ),
+            lambda: (
+                "MSVC-2017",
+                "Common_cpp_MSVC_2017",
+                "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
+                "MSVC 2017",
+            ),
+        ]
     else:
         # Cross compiling on Linux is much more difficult on Linux than it is on
         # Windows. Only support the current architecture.
         architectures = [CurrentShell.Architecture]
 
-    for config_name, repo_name, repo_id, config_desc, is_valid_func in [
-        (
-            "MSVC-2019",
-            "Common_cpp_MSVC_2019",
-            "AB7D87C49C2449F79D9F42E5195030FD",
-            "boost v1.70.0 - MSVC 2019",
-            lambda: CurrentShell.CategoryName == "Windows",
-        ),
-        (
-            "MSVC-2017",
-            "Common_cpp_MSVC_2017",
-            "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
-            "boost v1.70.0 - MSVC 2017",
-            lambda: CurrentShell.CategoryName == "Windows",
-        ),
-    ]:
-        if not is_valid_func():
-            continue
+        # No compilers on Linux for now
+        compiler_factories = []
+
+    for compiler_factory in compiler_factories:
+        config_name, repo_name, repo_id, config_desc = compiler_factory()
 
         for architecture in architectures:
             this_config_name = "{}-{}".format(config_name, architecture)
-            this_config_desc = "{} ({})".format(config_desc, architecture)
+            this_config_desc = "boost 1.70.0 - {} ({})".format(config_desc, architecture)
 
             d[this_config_name] = Configuration(
                 this_config_desc,
                 [
                     Dependency(
+                        "28F6B685610244468CBA2A80E84E021F",
+                        "Common_cpp_boost_Common",
+                        None,
+                        "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
+                    ),
+                    Dependency(
                         repo_id,
                         repo_name,
                         architecture,
                         "https://github.com/davidbrownell/{}.git".format(repo_name),
-                    ),
-                    Dependency(
-                        "28F6B685610244468CBA2A80E84E021F",
-                        "Common_cpp_boost_Common",
-                        "standard",
-                        "https://github.com/davidbrownell/Common_cpp_boost_Common.git",
                     ),
                 ],
             )
