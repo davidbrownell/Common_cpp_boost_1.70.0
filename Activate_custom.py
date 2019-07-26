@@ -52,7 +52,7 @@ def GetCustomActions(
     """
     Returns an action or list of actions that should be invoked as part of the activation process.
 
-    Actions are generic command line statements defined in 
+    Actions are generic command line statements defined in
     <Common_Environment>/Libraries/Python/CommonEnvironment/v1.0/CommonEnvironment/Shell/Commands/__init__.py
     that are converted into statements appropriate for the current scripting language (in most
     cases, this is Bash on Linux systems and Batch or PowerShell on Windows systems.
@@ -110,7 +110,7 @@ def GetCustomActions(
             CurrentShell.Commands.Set("DEVELOPMENT_ENVIRONMENT_BOOST_ROOT", boost_dir),
             CurrentShell.Commands.Set(
                 "DEVELOPMENT_ENVIRONMENT_BOOST_IS_STANDARD_CONFIGURATION",
-                "1" if configuration == "Standard" else "0",
+                "1" if configuration == "standard" else "0",
             ),
         ]
 
@@ -125,7 +125,7 @@ def GetCustomScriptExtractors():
     that depend upon it.
 
     ****************************************************
-    Note that it is very rare to have the need to implement 
+    Note that it is very rare to have the need to implement
     this method. In most cases, it is safe to delete it.
     ****************************************************
 
@@ -134,7 +134,7 @@ def GetCustomScriptExtractors():
         - DirGenerator:             Method to enumerate sub-directories when searching for scripts in a
                                     repository's Scripts directory.
 
-                                        def Func(directory, version_sepcs) -> [ (subdir, should_recurse), ... ] 
+                                        def Func(directory, version_sepcs) -> [ (subdir, should_recurse), ... ]
                                                                               [ subdir, ... ]
                                                                               (subdir, should_recurse)
                                                                               subdir
@@ -144,7 +144,7 @@ def GetCustomScriptExtractors():
                                         def Func(script_filename) -> [ command, ...]
                                                                      command
                                                                      None           # Indicates not supported
-        
+
         - CreateDocumentation:      Method that extracts documentation from a script.
 
                                         def Func(script_filename) -> documentation string
