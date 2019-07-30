@@ -128,6 +128,20 @@ def GetDependencies():
                 "MSVC 2017",
                 None,
             ),
+            # lambda: (
+            #     "Clang-8",
+            #     "Common_cpp_Clang_8",
+            #     "3DE9F3430E494A6C8429B26A1503C895",
+            #     "Clang 8",
+            #     None,
+            # ),
+            lambda: (
+                "Clang-8",
+                "Common_cpp_Clang_8",
+                "3DE9F3430E494A6C8429B26A1503C895",
+                "Clang 8 (ex)",
+                "-ex",
+            ),
         ]
     else:
         # Cross compiling on Linux is much more difficult on Linux than it is on
@@ -136,12 +150,19 @@ def GetDependencies():
 
         # No compilers on Linux for now
         compiler_factories = [
+            # lambda: (
+            #     "Clang-8",
+            #     "Common_cpp_Clang_8",
+            #     "3DE9F3430E494A6C8429B26A1503C895",
+            #     "Clang 8",
+            #     None,
+            # ),
             lambda: (
                 "Clang-8",
                 "Common_cpp_Clang_8",
                 "3DE9F3430E494A6C8429B26A1503C895",
-                "Clang 8",
-                None,
+                "Clang 8 (ex)",
+                "-ex",
             ),
         ]
 
@@ -154,8 +175,10 @@ def GetDependencies():
             architecture_configuration_suffix,
          ) = compiler_factory()
 
+        architecture_configuration_suffix = architecture_configuration_suffix or ""
+
         for architecture in architectures:
-            this_config_name = "{}-{}".format(config_name, architecture)
+            this_config_name = "{}-{}{}".format(config_name, architecture, architecture_configuration_suffix)
             this_config_desc = "boost 1.70.0 - {} ({})".format(config_desc, architecture)
 
             d[this_config_name] = Configuration(
@@ -170,7 +193,7 @@ def GetDependencies():
                     Dependency(
                         repo_id,
                         repo_name,
-                        "{}{}".format(architecture, architecture_configuration_suffix or ""),
+                        "{}{}".format(architecture, architecture_configuration_suffix),
                         "https://github.com/davidbrownell/{}.git".format(repo_name),
                     ),
                 ],
