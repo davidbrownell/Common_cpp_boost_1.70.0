@@ -158,7 +158,7 @@ def GetDependencies():
             #     None,
             # ),
             lambda: (
-                "Clang-8-ex",
+                "Clang-8",
                 "Common_cpp_Clang_8",
                 "3DE9F3430E494A6C8429B26A1503C895",
                 "Clang 8 (ex)",
