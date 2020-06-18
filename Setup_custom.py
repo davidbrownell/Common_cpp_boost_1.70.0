@@ -128,6 +128,13 @@ def GetDependencies():
                 "MSVC 2017",
                 None,
             ),
+            # lambda: (
+            #     "Clang-10",
+            #     "Common_cpp_Clang_10",
+            #     "42DE100A1DAE4FFC9697F75566C63DEB",
+            #     "Clang 10",
+            #     None,
+            # ),
             lambda: (
                 "Clang-10",
                 "Common_cpp_Clang_10",
@@ -155,8 +162,21 @@ def GetDependencies():
         # Windows. Only support the current architecture.
         architectures = [CurrentShell.Architecture]
 
-        # No compilers on Linux for now
         compiler_factories = [
+            # lambda: (
+            #     "Clang-10",
+            #     "Common_cpp_Clang_10",
+            #     "42DE100A1DAE4FFC9697F75566C63DEB",
+            #     "Clang 10",
+            #     None,
+            # ),
+            lambda: (
+                "Clang-10",
+                "Common_cpp_Clang_10",
+                "42DE100A1DAE4FFC9697F75566C63DEB",
+                "Clang 10 (ex)",
+                "-ex",
+            ),
             # lambda: (
             #     "Clang-8",
             #     "Common_cpp_Clang_8",
