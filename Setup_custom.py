@@ -115,46 +115,46 @@ def GetDependencies():
 
         compiler_factories = [
             lambda: (
-                "MSVC-2019",
+                "MSVC_2019",
                 "Common_cpp_MSVC_2019",
                 "AB7D87C49C2449F79D9F42E5195030FD",
                 "MSVC 2019",
                 None,
             ),
             lambda: (
-                "MSVC-2017",
+                "MSVC_2017",
                 "Common_cpp_MSVC_2017",
                 "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
                 "MSVC 2017",
                 None,
             ),
             # lambda: (
-            #     "Clang-10",
+            #     "Clang_10",
             #     "Common_cpp_Clang_10",
             #     "42DE100A1DAE4FFC9697F75566C63DEB",
             #     "Clang 10",
             #     None,
             # ),
             lambda: (
-                "Clang-10",
+                "Clang_10",
                 "Common_cpp_Clang_10",
                 "42DE100A1DAE4FFC9697F75566C63DEB",
                 "Clang 10 (ex)",
-                "-ex",
+                "_ex",
             ),
             # lambda: (
-            #     "Clang-8",
+            #     "Clang_8",
             #     "Common_cpp_Clang_8",
             #     "3DE9F3430E494A6C8429B26A1503C895",
             #     "Clang 8",
             #     None,
             # ),
             lambda: (
-                "Clang-8",
+                "Clang_8",
                 "Common_cpp_Clang_8",
                 "3DE9F3430E494A6C8429B26A1503C895",
                 "Clang 8 (ex)",
-                "-ex",
+                "_ex",
             ),
         ]
     else:
@@ -164,32 +164,32 @@ def GetDependencies():
 
         compiler_factories = [
             # lambda: (
-            #     "Clang-10",
+            #     "Clang_10",
             #     "Common_cpp_Clang_10",
             #     "42DE100A1DAE4FFC9697F75566C63DEB",
             #     "Clang 10",
             #     None,
             # ),
             lambda: (
-                "Clang-10",
+                "Clang_10",
                 "Common_cpp_Clang_10",
                 "42DE100A1DAE4FFC9697F75566C63DEB",
                 "Clang 10 (ex)",
-                "-ex",
+                "_ex",
             ),
             # lambda: (
-            #     "Clang-8",
+            #     "Clang_8",
             #     "Common_cpp_Clang_8",
             #     "3DE9F3430E494A6C8429B26A1503C895",
             #     "Clang 8",
             #     None,
             # ),
             lambda: (
-                "Clang-8",
+                "Clang_8",
                 "Common_cpp_Clang_8",
                 "3DE9F3430E494A6C8429B26A1503C895",
                 "Clang 8 (ex)",
-                "-ex",
+                "_ex",
             ),
         ]
 
@@ -205,7 +205,7 @@ def GetDependencies():
         architecture_configuration_suffix = architecture_configuration_suffix or ""
 
         for architecture in architectures:
-            this_config_name = "{}-{}{}".format(config_name, architecture, architecture_configuration_suffix)
+            this_config_name = "{}_{}{}".format(config_name, architecture, architecture_configuration_suffix)
             this_config_desc = "boost 1.70.0 - {} ({})".format(config_desc, architecture)
 
             d[this_config_name] = Configuration(
